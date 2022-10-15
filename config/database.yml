@@ -1,0 +1,43 @@
+# default: &default
+#   adapter: postgresql
+#   encoding: utf8
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   schema_search_path: "mobile,tabelassistemas,public"
+#   username: root
+
+
+# development:
+#   <<: *default
+#   database: sg
+#   password: sgweb-2018
+#   host: sgweb-development.cj6yqb8ltbyj.us-east-1.rds.amazonaws.com
+#   port: 5432
+  
+
+# test:
+#   <<: *default
+#   password: master1
+#   host: localhost
+#   database: sg_test
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  schema_search_path: "administrativo, cadastros, app, tabelas_sistemas, public"
+  username: <%= ENV["LINEAR_API_DB_USER"] %>
+  password: <%= ENV["LINEAR_API_DB_PWD"] %>
+  host: <%= ENV["LINEAR_API_DB_HOST"] %>
+  port: <%= ENV["LINEAR_API_DB_PORT"] %>
+
+development:
+  <<: *default
+  database: <%= ENV["LINEAR_API_DB_DATABASE"] %>
+
+production:
+  <<: *default
+  database: <%= ENV["LINEAR_API_DB_DATABASE"] %>
+
+test:
+  <<: *default
+  database: sg_test

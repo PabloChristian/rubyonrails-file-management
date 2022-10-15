@@ -1,0 +1,3 @@
+[submodule "db"]
+	path = db
+	url = git@gitlab.com:linear-back/services/ruby/database/db.git

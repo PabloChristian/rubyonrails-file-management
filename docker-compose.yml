@@ -1,0 +1,96 @@
+version: '3.4'
+
+services:
+
+  # The reverse proxy service (Træfik)
+  proxy:
+    image: traefik
+    command: --api --docker  # Enables the web UI and tells Træfik to listen to docker
+    ports:
+      - "80:80"      # The HTTP port
+      - "8080:8080"  # The Web UI (enabled by --api)
+    networks:
+      - dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # So that Traefik can listen to the Docker events
+    labels:
+      - "traefik.enable=false"
+  
+  # Banco de dados
+  db:
+    image: postgres:latest
+    ports:
+      - "15432:5432"
+    env_file:
+      - .env
+    networks:
+      - dev
+    security_opt:
+      - seccomp:unconfined
+    labels:
+      - "traefik.enable=false"
+
+  # Interface para administrar o banco
+  # Utilize usuário 'pgadmin4@pgadmin.org' e senha 'admin' em http://localhost:5050/
+  pgAdmin:
+    image: fenglc/pgadmin4
+    ports:
+      - "5050:5050"
+    networks:
+      - dev
+    security_opt:
+      - seccomp:unconfined
+    labels:
+      - "traefik.enable=false"
+
+  # Cria a imagem para desenvolvimento
+  build_dev_image:
+    image: ${LINEAR_IMAGE_DEV}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code/
+    env_file:
+      - .env
+    networks:
+      - dev      
+    security_opt:
+      - seccomp:unconfined
+
+  # Migrations
+  migrations:
+    image: ${LINEAR_IMAGE_DEV}
+    volumes:
+      - .:/code/
+    env_file:
+      - .env
+    command: rake db:create db:migrate
+    networks:
+      - dev      
+    depends_on:
+      - build_dev_image
+    security_opt:
+      - seccomp:unconfined
+
+  # API do App
+  app:
+    image: ${LINEAR_IMAGE_DEV}
+    volumes:
+      - .:/code/
+    env_file:
+      - .env
+    command: "rails s"
+    networks:
+      - dev      
+    depends_on:
+      - migrations
+    security_opt:
+      - seccomp:unconfined
+    labels:
+      - "traefik.port=3000"
+      - "traefik.frontend.rule=PathPrefixStrip:/app"
+
+networks:
+    dev:
+      driver: bridge

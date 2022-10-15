@@ -1,0 +1,14 @@
+~/
+.vscode/
+.vs/
+.dockerignore
+.env
+.git
+.gitignore
+.gitlab-ci.yml
+.editorconfig
+.vs
+.vscode
+docker-compose*.yml
+docker-compose.dcproj
+*.sln

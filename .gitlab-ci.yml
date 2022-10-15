@@ -1,0 +1,31 @@
+variables:
+  # recomendado para melhor desempenho
+  DOCKER_DRIVER: overlay
+  # versao aplicada nas tags das imagens
+  LINEAR_IMAGE_VERSION: ci-$CI_COMMIT_TAG
+
+stages:
+  - deploy
+
+# levanta o servico do docker para build das imagens
+services:
+  - docker:dind
+
+documentos_eletronicos:
+  stage: deploy
+  only:
+    # executado apenas por tag
+    - tags
+    - triggers
+    - schedules
+  image: docker:latest
+  script:
+    # instala o docker-compose
+    - apk add --no-cache python3 python3-dev py-pip build-base libffi-dev openssl-dev libgcc
+    - pip install docker-compose  
+    # cria as imagens
+    - docker-compose -f build/docker-compose.yaml build
+    # autentica no registry do GitLab
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # faz o push das imagens
+    - docker-compose -f build/docker-compose.yaml push

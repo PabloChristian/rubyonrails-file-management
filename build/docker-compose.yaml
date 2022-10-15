@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+
+  documentos_eletronicos:
+    image: ${CI_REGISTRY_IMAGE}/documentos_eletronicos:${LINEAR_IMAGE_VERSION}
+    build:
+      context: ../
+      dockerfile: build/Dockerfile

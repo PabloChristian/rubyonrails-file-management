@@ -1,0 +1,112 @@
+---
+pt-BR:
+  activerecord:
+    errors:
+      messages:
+        operacao_invalida: 'Está sendo executada uma operação inesperada e/ou não permitida.'
+        record_invalid: 'A validação falhou: %{errors}'
+        restrict_dependent_destroy:
+          has_one: Não é possível excluir o registro pois existe um %{record} dependente
+          has_many: Não é possível excluir o registro pois existem %{record} dependentes
+      commons:
+        data_maior_igual_atual: 'Data tem que ser maior ou igual a data Atual'
+        data_termino_maior_data_inicio: 'Data termino tem que ser maior que a data de inicio'
+        periodo_invalido: 'Período Inválido'
+        imagens:
+          limite_500_kb: "Deve ser menor ou igual a 500 KB."
+
+      documento_eletronico:
+        emitente_invalido: 'Cnpj do Emitente (%{cnpj}) não pertence ao Tenant cadastrado ou não existe.'
+        chave_acesso_duplicada: 'Chave de acesso duplicada.'
+        duplicidade_cancelamento: 'Já existe documento de cancelamento para a chave informada.'
+        evento_incompativel: 'Evento informado não é compatível com o documento enviado.'
+        protocolo_duplicado: 'Já existe documento cadastrado para o número de protocolo informado.'
+        contigencia_existente: 'Existe contingência para esta chave de acesso. Utilize a opção de substituir !'
+        chave_acesso_divergente: 'A substituição de uma contingência não permite chaves de acessos diferentes entre o xml de contigência, xml de autorização e a chave de acesso passada como parâmetro.'
+        xml_substituicao_invalido: 'Documento que esta sendo utilizado para substituir a contingência é inválido.'
+        evento_substituicao_nao_permitido: 'Evento para substituição de contingência deve ser igual a 1 (Autorização)'
+      downloads:
+        destinatarios_vazio: 'É necessário pelo menos um destinatário'
+        destinatario_invalido: 'Destinatário inválido.'
+        email_destinatario_invalido: 'Email informado é inválido: %{email}'
+        periodo_obrigatorio: 'É necesário informar o período.'
+        periodo_maior_que_o_permitido: 'Período não pode ser maior que 31 dias! Caso necessário faça outras solicitações de download para períodos menores.'
+        emitentes_vazio: 'É necessário selecionar pelo menos um emitente.'
+        emitentes_invalidos: 'Emitentes inválidos.'
+    models:
+      documento_eletronico:
+        one: Documento Eletrônico
+        other:  Documentos Eletrônicos
+    attributes:
+      notas_fiscais:
+        filtros:
+          data_emissao_inicial: "Data Emissão Inicial"
+          data_emissao_final: "Data Emissão Final"
+          empresas_ids: "Empresas"
+          cpf_cliente: "CPF Cliente"
+          cnpj_cliente: 'CNPJ Cliente'
+          codigo_nota: 'Código Nota'
+          protocolo: 'Número Protocolo'
+          eventos_ids: 'Tipo de Eventos'
+          tipos_documentos_eletronicos_ids: 'Modelos'
+      eventos: [~, Autorização, Cancelamento, Inutilização, Contingência]
+      download:
+        etapas:
+          preparacao: 'Preparação'
+          coleta: 'Coleta de arquivos'
+          compactacao: 'Compactação'
+          upload_s3: 'Upload'
+          notificacao: 'Notificação de Destinatários'
+        status:
+          pendente: 'Pendente'
+          processamento: 'Processando'
+          falha: 'Falha'
+          concluido: 'Concluido'
+      protocolo_entrega:
+        status:
+          pendente: 'Aguardando Processamento'
+          armazenado: 'Armazenado'
+          inexistente: 'Protocolo não identificado.'
+        tipo_falha:
+          validacoes: 'Não armazenado por inconsistência'
+          erro_interno: 'Não armazenado devido erros internos'
+  controllers:
+    errors:
+      token_nao_informado: 'Token de autenticacao nao informado.'
+      tenant_nao_localizado: 'Tenant não localizado ou inválido.'
+      usuario_nao_localizado: 'Usuário não localizado ou inválido.'
+      parceiro_nao_localizado: 'Cliente não localizado para o ID informado.'
+      cliente_nao_localizado: 'Cliente não localizado para o CPF informado.'
+      cnpj_token_diferente: 'Cnpj da empresa emitente (%{cnpj}), é diferente do permitido pelo token de acesso (%{cnpj_token}).'
+      operacao_nagada: 'Esta api possui acesso restrito. Operação negada !!'
+    notas_fiscais:
+      filtro_invalido: 'Filtro informado para localizar documentos é inválido.'
+      filtro_invalido_datas: 'É necessário informar período para pesquisa, seja data de emissão e/ou data de cadastro !'
+      filtro_data_emissao_invalida: 'É necessário informar período de emissão para pesquisar !'
+      periodo_superior_31_dias: 'Período de pesquisa não poderá ser superior a 31 dias !'
+      chave_acesso_contingencia_nao_informada: 'Chave de Acesso da contingência não foi informada.'
+    downloads:
+      filtros_sem_registros: 'Filtro não possui documentos para download.'
+      filtros_nao_permitidos: 'Ao pesquisar documentos pela Chave de Acesso, Código nota e/ou Protocolo, entende-se que deseja um documento específico! Localize o mesmo e faça o download individual.'
+      descricao_etapa_compactacao: 'Gera aquivo zip com XML`s'
+      descricao_etapa_upload_s3: 'Disponibiliza arquivo para Download'
+      descricao_etapa_notificacao: 'Envio de Link para Destinatario(s)'
+      descricao_etapa_preparacao: 'Reúne informações para início do processo'
+    protocolos_entregas:
+      consulta_negada: 'Está sendo consultado um protocolo que não pertence ao tenant. Verifique as credenciais de acesso!'
+  jobs:
+    download_xml_compactacao:
+      pasta_nao_encontrada: "Diretório para ser compactado não foi localizado: %{pasta}"
+      arquivo_nao_gerado: "Arquivo Zip não foi gerado corretamente: %{arquivo}"
+    download_xml_upload_s3:
+      arquivo_nao_encontrado: "Arquivo para upload não encontrado: %{arquivo}"
+    download_xml_notificacao:
+      email_nao_enviado: "Serviço responsável pelo envio de email não conseguiu realizar a operação"
+      destinatarios_invalidos: "Destinatários inválidos ou não existentes."
+      email:
+        assunto: 'Download de Documentos Eletrônicos'
+        mensagem: 'Conforme solicitado, segue o link para download dos arquivos Xml.'
+        titulo: 'Olá,'
+        botao: 'Baixar Arquivo'
+    notas_fiscais_xml_armazenamento:
+      chave_acesso_contingencia_invalido: 'Não localizado registro para substituição. Chave de acesso pesquisada: %{chave}'
