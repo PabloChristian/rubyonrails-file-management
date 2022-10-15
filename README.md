@@ -1,9 +1,9 @@
 <h1> 
-  Document Management
+  File Management
 </h1>
 
 ## 📌 Overview
-A document management system for upload and download file using Ruby on Rails
+A file management system for upload and download file using Ruby on Rails
 
 ## 🧾 Features
 <ul>
