@@ -2,10 +2,10 @@
   Document Management
 </h1>
 
-#### 📌 Overview
+## 📌 Overview
 A document management system for upload and download file using Ruby on Rails
 
-#### 🧾 Features
+## 🧾 Features
 <ul>
 	<li>✔ Upload</li>
 	<li>✔ Download</li>
